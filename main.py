@@ -1,25 +1,10 @@
-import random
-
-game_board = [['','',''],['','',''],['','','']]
-
-
-def generated_choices(board):
-    if check_board(board) == False:    
-        choose_row = random.choice(range(len(board)))
-        choose_row_position = random.choice(range(len(board[choose_row])))
-        board[choose_row][choose_row_position] = 'X'
-
-        choose_row_o = random.choice(range(len(board)))
-        choose_row_position_o = random.choice(range(len(board[choose_row_o])))
-        if board[choose_row_o][choose_row_position_o] == 'X':
-            board[choose_row_o][choose_row_position_o] = 'O'
-        else:
-            board[choose_row_o][choose_row_position_o] = 'O'
-    else:
-        print("Game Over")        
+   
    
 def check_board(board):
-    return all([all(board[i]) for i in  range(len(board)) ])
+    return all(all(board[i]) for i in  range(len(board)))
+
+def is_board_full(board):
+    return all(cell != ' ' for row in board for cell in row)
 
 def print_board(board):
     for row in board:
@@ -34,9 +19,9 @@ def win(board):
         if all( cell == row[0]  and cell != '' for cell in row ):
             return True
     
-    # #Check Columns
-    for i in range(3):
-        if  all( col[i] == board[i+1][i]  and col[i] != '' for col in board ):
+    # Check columns
+    for col in range(3):
+        if all(board[row][col] == board[0][col] and board[row][col] != ' ' for row in range(3)):
             return True
         
     # Check diagonals
@@ -47,22 +32,36 @@ def win(board):
         return True
 
     return False     
+  
 
-def move(board):
-    while check_board(board) == False:
-        move_x = input('Enter 1 to move: ')
-        if move_x == '1':
-            generated_choices(board)
-            print_board(board)
-    if win(board) == True and check_board(board) == True:
-        print("WIN")
-    else:
-        print('Try Again')    
 
-move(game_board)        
+def tic_tac_toe():
+    board = [[' ' for _ in range(3)] for _ in range(3)]
+    current_player = 'X'
+
+    while True:
+        print_board(board)
+        print(f"Player {current_player}'s turn")
+
+        row = int(input("Enter row (0, 1, or 2): "))
+        col = int(input("Enter column (0, 1, or 2): "))
+
+        if 0 <= row < 3 and 0 <= col < 3 and board[row][col] == ' ':
+            board[row][col] = current_player
+
+            if win(board):
+                print_board(board)
+                print(f"Player {current_player} wins!")
+            elif check_board(board):
+                print_board(board)
+                print("It's a tie!")
+
+            current_player = 'O' if current_player == 'X' else 'X'
+        else:
+            print("Invalid move. Try again.") 
  
- 
-         
+if __name__ == "__main__":
+    tic_tac_toe()
 
 
 
@@ -81,7 +80,3 @@ move(game_board)
 
 
 
-    # Check columns
-    # for col in range(3):
-    #     if all(board[row][col] == board[0][col] and board[row][col] != ' ' for row in range(3)):
-    #         return True
