@@ -1,9 +1,6 @@
    
    
 def check_board(board):
-    return all(all(board[i]) for i in  range(len(board)))
-
-def is_board_full(board):
     return all(cell != ' ' for row in board for cell in row)
 
 def print_board(board):
@@ -13,12 +10,12 @@ def print_board(board):
 
 
 def win(board):
-    # Check Rows
-    # Hint --- If the item in a Row == 1st item in all the other Rows
-    for row in board:
-        if all( cell == row[0]  and cell != '' for cell in row ):
-            return True
     
+    # Check Rows
+    for row in board:
+        if all(cell == row[0] and cell != ' ' for cell in row):
+            return True
+
     # Check columns
     for col in range(3):
         if all(board[row][col] == board[0][col] and board[row][col] != ' ' for row in range(3)):
@@ -52,9 +49,11 @@ def tic_tac_toe():
             if win(board):
                 print_board(board)
                 print(f"Player {current_player} wins!")
+                break
             elif check_board(board):
                 print_board(board)
                 print("It's a tie!")
+                break
 
             current_player = 'O' if current_player == 'X' else 'X'
         else:
